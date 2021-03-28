@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>UE4 项目集成第三方库整理 - Al3ix.com</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Al3ix.com"><meta name="msapplication-TileImage" content="/img/favicon.svg"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Al3ix.com"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="记录一下使用过程中的一些细节和碰到的坑"><meta property="og:type" content="blog"><meta property="og:title" content="UE4 项目集成第三方库整理"><meta property="og:url" content="http://example.com/2019/05/01/UE4-%E9%A1%B9%E7%9B%AE%E9%9B%86%E6%88%90%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93%E6%95%B4%E7%90%86/"><meta property="og:site_name" content="Al3ix.com"><meta property="og:description" content="记录一下使用过程中的一些细节和碰到的坑"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://s2.ax1x.com/2019/05/01/EYe79A.png"><meta property="article:published_time" content="2019-05-01T08:54:48.000Z"><meta property="article:modified_time" content="2019-05-01T11:00:06.981Z"><meta property="article:author" content="Al3ix"><meta property="article:tag" content="UE4"><meta property="twitter:card" content="summary"><meta property="twitter:image" content="https://s2.ax1x.com/2019/05/01/EYe79A.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://example.com/2019/05/01/UE4-%E9%A1%B9%E7%9B%AE%E9%9B%86%E6%88%90%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93%E6%95%B4%E7%90%86/"},"headline":"UE4 项目集成第三方库整理","image":["https://s2.ax1x.com/2019/05/01/EYe79A.png"],"datePublished":"2019-05-01T08:54:48.000Z","dateModified":"2019-05-01T11:00:06.981Z","author":{"@type":"Person","name":"Al3ix"},"description":"记录一下使用过程中的一些细节和碰到的坑"}</script><link rel="canonical" href="http://example.com/2019/05/01/UE4-%E9%A1%B9%E7%9B%AE%E9%9B%86%E6%88%90%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93%E6%95%B4%E7%90%86/"><link rel="icon" href="/img/favicon.svg"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css"><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script><!--!--><!--!--><meta name="generator" content="Hexo 5.4.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/Al3ix32.png" alt="Al3ix.com" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">主页</a><a class="navbar-item" href="/archives">归档</a><a class="navbar-item" href="/categories">分类</a><a class="navbar-item" href="/tags">标签</a><a class="navbar-item" href="/about">关于</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2019-05-01T08:54:48.000Z" title="2019/5/1 下午4:54:48">2019-05-01</time>发表</span><span class="level-item"><time dateTime="2019-05-01T11:00:06.981Z" title="2019/5/1 下午7:00:06">2019-05-01</time>更新</span><span class="level-item">5 分钟读完 (大约774个字)</span></div></div><h1 class="title is-3 is-size-4-mobile">UE4 项目集成第三方库整理</h1><div class="content"><p>记录一下使用过程中的一些细节和碰到的坑</p>
+<span id="more"></span>
+
+<h3 id="关于库"><a href="#关于库" class="headerlink" title="关于库"></a>关于库</h3><p>在UE4中需要使用自己制作第三方库需要注意的几点（Windows）：<br>1.库工程的解决方案配置必须为Release,解决方案平台看自己需要。<br>2.静态库需要使用到对应类的头文件和.lib文件，制作静态库时最好分.h.cpp。<br>3.动态库自需要注意导出函数的声明。</p>
+<p>静态库在程序编译时会被连接到目标代码中，程序运行时将不再需要该静态库。<br>动态库在程序编译时并不会被连接到目标代码中，而是在程序运行是才被载入。</p>
+<p>对于小体量单个程序使用的库来说生成静态库或者动态库区别不大，大型多个程序使用的库还是推荐使用动态库。</p>
+<h3 id="静态库在UE4的使用"><a href="#静态库在UE4的使用" class="headerlink" title="静态库在UE4的使用"></a>静态库在UE4的使用</h3><p>由于是使用库提供的一些接口，最好还是新建一个模块来集成，不建议直接在PRIMARY_GAME_MODULE使用，优点在于可以根据需求来加载卸载。<br>这里使用插件新建一个模块：<br>需要在PluginName.build.cs配置好库的路径。</p>
+<p>工程目录：<br><img src="https://s2.ax1x.com/2019/05/01/EYe79A.png" alt="目录"><br>这里重点是Plugin目录</p>
+<p>库的头文件路径：<br>temp\Plugins\Al3ix\Source\ThirdParty\MyTestLibrary\include<br>.lib文件路径：<br>temp\Plugins\Al3ix\Source\ThirdParty\MyTestLibrary\x64<br>PluginName.build.cs文件路径：（这里Al3ix和ThirdParty在同一个目录下）<br>temp\Plugins\Al3ix\Source\Al3ix</p>
+<p>PluginName.build.cs 代码：</p>
+<pre><code class="bash">// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+using System.IO;    //注意添加这个文件的引用，不然会提示没有Path这个成员
+using UnrealBuildTool;
+
+public class Al3ix : ModuleRules
+&#123;
+    public Al3ix(ReadOnlyTargetRules Target) : base(Target)
+    &#123;
+        PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
+        
+        PublicIncludePaths.AddRange(
+            new string[] &#123;
+                // ... add public include paths required here ...
+            &#125;
+            );
+                
+        
+        PrivateIncludePaths.AddRange(
+            new string[] &#123;
+                // ... add other private include paths required here ...
+            &#125;
+            );
+            
+        
+        PublicDependencyModuleNames.AddRange(
+            new string[]
+            &#123;
+                &quot;Core&quot;,
+                &quot;CoreUObject&quot;,
+                &quot;Engine&quot;,
+                &quot;Al3ixLibrary&quot;,
+                &quot;Projects&quot;
+                // ... add other public dependencies that you statically link with here ...
+            &#125;
+            );
+            
+        
+        PrivateDependencyModuleNames.AddRange(
+            new string[]
+            &#123;
+                // ... add private dependencies that you statically link with here ...    
+            &#125;
+            );
+        
+        
+        DynamicallyLoadedModuleNames.AddRange(
+            new string[]
+            &#123;
+                // ... add any modules that your module loads dynamically here ...
+            &#125;
+            );
+
+
+        //重点部分=====================================
+        //需要依赖的静态库根路径
+        string MyTestLibRootPath = Path.Combine(ThirdPartyPath, &quot;MyTestLibrary&quot;);
+        //分平台加载 
+        if(Target.Platform == UnrealTargetPlatform.Win64)
+        &#123;
+            PublicIncludePaths.Add(Path.Combine(MyTestLibRootPath, &quot;include&quot;));
+            PublicLibraryPaths.Add(Path.Combine(MyTestLibRootPath, &quot;x64&quot;));
+            PublicAdditionalLibraries.Add(&quot;Al3ixLibrary.lib&quot;);
+        &#125;
+    &#125;
+    //第三方静态库根路径
+    private string ThirdPartyPath
+    &#123;
+        get &#123; return Path.GetFullPath(Path.Combine(ModuleDirectory, &quot;../ThirdParty&quot;)); &#125;
+    &#125;
+&#125;
+</code></pre>
+<p>这里通过虚幻的UBT会自动加载对应路径的头文件和.lib 不需要像普通C++项目在项目熟悉中添加库相关依赖。<br>在Plugin模块新建类文件，直接#include “库接口对应的头文件.h” 可以使用相对路径，就可以使用库提供的接口了。</p>
+<h3 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h3><p>如果编译报错，或者提示.lib文件无法打开，一般是build.cs中配置的路径错了。<br>error LNK2038: 检测到“ITERATOR_DEBUG_LEVEL”的不匹配项 这种就是库工程的解决方案配置是Debug改为Release就行了</p>
+</div><div class="article-licensing box"><div class="licensing-title"><p>UE4 项目集成第三方库整理</p><p><a href="http://example.com/2019/05/01/UE4-项目集成第三方库整理/">http://example.com/2019/05/01/UE4-项目集成第三方库整理/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>作者</h6><p>Al3ix</p></div></div><div class="level-item is-narrow"><div><h6>发布于</h6><p>2019-05-01</p></div></div><div class="level-item is-narrow"><div><h6>更新于</h6><p>2019-05-01</p></div></div><div class="level-item is-narrow"><div><h6>许可协议</h6><p><a class="icon" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a><a class="icon" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a><a class="icon" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/UE4/">UE4</a></div><div class="notification is-danger">You need to set <code>install_url</code> to use ShareThis. Please set it in <code>_config.yml</code>.</div></article></div><div class="card"><div class="card-content"><h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3><div class="buttons is-centered"><a class="button donate" href="/" target="_blank" rel="noopener" data-type="afdian"><span class="icon is-small"><i class="fas fa-charging-station"></i></span><span>爱发电</span></a><a class="button donate" data-type="alipay"><span class="icon is-small"><i class="fab fa-alipay"></i></span><span>支付宝</span><span class="qrcode"><img src="/" alt="支付宝"></span></a><a class="button donate" href="/" target="_blank" rel="noopener" data-type="buymeacoffee"><span class="icon is-small"><i class="fas fa-coffee"></i></span><span>送我杯咖啡</span></a><a class="button donate" href="/" target="_blank" rel="noopener" data-type="patreon"><span class="icon is-small"><i class="fab fa-patreon"></i></span><span>Patreon</span></a><div class="notification is-danger">You forgot to set the <code>business</code> or <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.</div><a class="button donate" data-type="wechat"><span class="icon is-small"><i class="fab fa-weixin"></i></span><span>微信</span><span class="qrcode"><img src="/" alt="微信"></span></a></div></div></div><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2019/06/08/UE4-LoadingScreen%E5%AE%9E%E8%B7%B5/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">UE4 LoadingScreen实践</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2019/04/29/UE4-%E5%85%B3%E4%BA%8E%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E5%A4%84%E7%90%86/"><span class="level-item">UE4 关于字符串的处理</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">评论</h3><div class="notification is-danger">You forgot to set the <code>shortname</code> for Disqus. Please set it in <code>_config.yml</code>.</div></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="/img/headpoto.jpg" alt="Al3ix"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">Al3ix</p><p class="is-size-6 is-block">Game Developer</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>Shanghai</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">文章</p><a href="/archives"><p class="title">10</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">分类</p><a href="/categories"><p class="title">0</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">标签</p><a href="/tags"><p class="title">5</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/904233920" target="_blank" rel="noopener">关注我</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/904233920"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Facebook" href="https://facebook.com"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Twitter" href="https://twitter.com"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Dribbble" href="https://dribbble.com"><i class="fab fa-dribbble"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="RSS" href="/"><i class="fas fa-rss"></i></a></div></div></div><!--!--><!--!--><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2019-10-08T12:36:29.000Z">2019-10-08</time></p><p class="title"><a href="/2019/10/08/%E5%BC%80%E6%94%BE%E5%A4%A7%E4%B8%96%E7%95%8C%E5%BC%95%E6%93%8E%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E5%B7%A5%E5%85%B7/">开放大世界引擎性能优化工具</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2019-10-07T09:08:38.000Z">2019-10-07</time></p><p class="title"><a href="/2019/10/07/Python%E8%84%9A%E6%9C%AC%E5%B7%A5%E5%85%B7%E7%AF%87%E4%B9%8B%E6%96%87%E6%9C%AC%E8%BD%AC%E7%A0%81/">Python脚本工具篇之文本转码</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2019-09-22T11:38:35.000Z">2019-09-22</time></p><p class="title"><a href="/2019/09/22/%E7%BD%91%E7%BB%9C%E5%90%8C%E6%AD%A5/">网络同步</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2019-07-24T15:34:08.000Z">2019-07-24</time></p><p class="title"><a href="/2019/07/24/UI%E4%BC%98%E5%8C%96%E7%AF%87/">UI优化篇</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2019-07-20T16:42:17.000Z">2019-07-21</time></p><p class="title"><a href="/2019/07/21/UE4%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/">UE4内存管理</a></p></div></article></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">归档</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2019/10/"><span class="level-start"><span class="level-item">十月 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/09/"><span class="level-start"><span class="level-item">九月 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/07/"><span class="level-start"><span class="level-item">七月 2019</span></span><span class="level-end"><span class="level-item tag">2</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/06/"><span class="level-start"><span class="level-item">六月 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/05/"><span class="level-start"><span class="level-item">五月 2019</span></span><span class="level-end"><span class="level-item tag">1</span></span></a></li><li><a class="level is-mobile" href="/archives/2019/04/"><span class="level-start"><span class="level-item">四月 2019</span></span><span class="level-end"><span class="level-item tag">3</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/UE4/"><span class="tag">UE4</span><span class="tag">2</span></a></div><div class="control"><a class="tags has-addons" href="/tags/UE4-Loading-UI/"><span class="tag">UE4 Loading UI</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/UE4%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/"><span class="tag">UE4内存管理</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/UI/"><span class="tag">UI</span><span class="tag">1</span></a></div><div class="control"><a class="tags has-addons" href="/tags/%E6%9D%90%E8%B4%A8-%E5%8D%A1%E9%80%9A%E6%B8%B2%E6%9F%93/"><span class="tag">材质 卡通渲染</span><span class="tag">1</span></a></div></div></div></div></div><div class="card widget" data-type="subscribe-email"><div class="card-content"><div class="menu"><h3 class="menu-label">订阅更新</h3><form action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open(&#039;https://feedburner.google.com/fb/a/mailverify?uri=&#039;,&#039;popupwindow&#039;,&#039;scrollbars=yes,width=550,height=520&#039;);return true"><input type="hidden" value="" name="uri"><input type="hidden" name="loc" value="en_US"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button" type="submit" value="订阅"></div></div></form></div></div></div><div class="card widget"><div class="card-content"><div class="notification is-danger">You need to set <code>client_id</code> and <code>slot_id</code> to show this AD unit. Please set it in <code>_config.yml</code>.</div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/Al3ix32.png" alt="Al3ix.com" height="28"></a><p class="is-size-7"><span>&copy; 2021 Al3ix</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "此网站使用Cookie来改善您的体验。",
+          dismiss: "知道了！",
+          allow: "允许使用Cookie",
+          deny: "拒绝",
+          link: "了解更多",
+          policy: "Cookie政策",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>
